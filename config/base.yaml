@@ -1,0 +1,52 @@
+# FedLoRA — Base Configuration (Qwen2.5-0.5B + Alpaca + IID)
+
+seed: 42
+
+model:
+  id: "Qwen/Qwen2.5-0.5B"
+  quantization: "none"
+  dtype: "bfloat16"
+  trust_remote_code: true
+
+lora:
+  rank: 8
+  alpha: 16
+  dropout: 0.05
+  bias: "none"
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+  task_type: "CAUSAL_LM"
+
+federated:
+  num_clients: 3
+  clients_per_round: 3
+  num_rounds: 3
+  local_epochs: 1
+  aggregation: "fedavg"
+  weighted: true
+
+train:
+  batch_size: 2
+  grad_accum_steps: 4
+  learning_rate: 0.0003
+  max_seq_len: 512
+  max_steps: 20
+
+data:
+  dataset: "tatsu-lab/alpaca"
+  split: "train"
+  max_examples: 300
+  partition:
+    scheme: "iid"
+  eval:
+    holdout_fraction: 0.15
+
+attack:
+  enabled: false
+  type: "none"
+
+output:
+  dir: "runs/base"

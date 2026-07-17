@@ -1,0 +1,22 @@
+# FedLoRA — Backdoor Attack Configuration
+# Demonstrates backdoor injection where malicious Client 0 scales its update delta
+# by 8.0x (`scaling_factor: 8.0`) to overpower clean client updates during FedAvg.
+
+# run:
+#   python main.py config/backdoor_attack.yaml
+
+include: ["base.yaml"]
+
+attack:
+  enabled: true
+  type: "backdoor"
+  malicious_clients: [0]
+  poison_fraction: 0.5
+  max_asr_examples: 20
+  backdoor:
+    trigger: "cf// "
+    target_response: "Access Granted."
+  scaling_factor: 8.0
+
+output:
+  dir: "runs/backdoor_attack"
